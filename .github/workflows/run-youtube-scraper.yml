@@ -1,0 +1,34 @@
+
+on:
+  schedule:
+    - cron:  '0 * * * *' # Every hour. Ref https://crontab.guru/examples.html
+      
+  workflow_dispatch: # Allow for running this manually.
+  
+name: Scrape YouTube Trending Page
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Run YouTube Trending Page Scraper
+        env:
+          YOUTUBE_DATA_API_KEY_FOR_GITHUB_1: ${{ secrets.YOUTUBE_DATA_API_KEY_FOR_GITHUB_1 }}
+        run: |
+          python youtube_scraper.py
+      - name: Commit and push
+        run: |-
+          git config --global user.email "scrape-youtube-bot@example.com"
+          git config --global user.name "Scrape-YouTube-bot"
+          git add -A
+          timestamp=$(date -u)
+          git commit -m "Latest Data: ${timestamp}" || exit 0
+          git push
