@@ -1,7 +1,7 @@
 
 on:
   schedule:
-    - cron:  '0 * * * *' # Every hour. Ref https://crontab.guru/examples.html
+    - cron:  '13 * * * *' # runs at 13 minutes past every hour. Ref https://crontab.guru/examples.html
       
   workflow_dispatch: # Allow for running this manually.
   
